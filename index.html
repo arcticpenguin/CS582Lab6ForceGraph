@@ -4,7 +4,7 @@
 <script src="http://underscorejs.org/underscore-min.js" charset="utf-8"></script>
 
 <style>
-	.link {
+	.link { 
 		stroke: #999;
 		stroke-opacity: .6;
 	}
@@ -15,7 +15,7 @@
 		if (err) return console.log(err);
 		console.log("Success! Data loaded.");
 		// extract nodes
-		// TODO each row of the csv represents a connection. Changes the lines in the two TODOs below to access the correct column in the data file.
+		// each row of the csv represents a connection. Changes the lines in the two TODOs below to access the correct column in the data file.
 		// e.g. {"name":"Myriel","group":1},
 		var nodes = [];
 		d.forEach(function(r) {
@@ -74,9 +74,15 @@
 		var color = d3.scale.category20();
 		// TODO View the [d3.force](https://github.com/mbostock/d3/wiki/Force-Layout) page to learn about the options available. Use what you learn there to set sensible values for charge and linkDistance. Set more options if it makes sense to.
 		var force = d3.layout.force()
-			// TODO    .charge(???)
+			.size([width, height])
+			.linkStrength(1)
+			.friction(0.9)
 			.linkDistance(20)
-			.size([width, height]);
+			.charge(-30)
+			.gravity(0.1)
+			.theta(0.8)
+			.alpha(0.1);
+			
 		var svg = d3.select("body").append("svg")
 			.attr("width", width)
 			.attr("height", height);
@@ -89,20 +95,15 @@
 		var link = svg.selectAll(".link")
 			.data(graph.links)
 			.enter().append("line")
-			.attr("stroke","grey")
-			.attr("stroke-width",2)
-			.attr("class", "WoW");
-			
-			console.log(graph.links);
-			
+			.attr("class", "link");
 		// TODO Decide what should be appended for each "node". Set the attributes (e.g. size, width, radius, etcetera. Also set it's style-- "fill" at minimum (consider using the color object defined above, but not necessarily).
 		var node = svg.selectAll(".node")
 			.data(graph.nodes)
 			.enter().append("circle")
 			.attr("r", 5)
-			.attr("fill","steelblue")
+			.attr("fill", "steelblue")
 			.call(force.drag);
-			console.log(graph.nodes);
+		console.log(graph.nodes);
 		node.append("title")
 			.text(function(d) {
 				return d.name;
@@ -123,10 +124,9 @@
 				.attr("y2", function(d) {
 					return d.target.y;
 				});
-				//console.log(link);
+			//console.log(link);link
 			// TODO Whatever you made the "nodes" above, set the x and y here.
 			node
-				
 				.attr("cx", function(d) {
 					return d.x;
 				})
